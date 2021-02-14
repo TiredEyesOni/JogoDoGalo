@@ -36,6 +36,7 @@ function clickTurn(square) {
   } else {
     currentPlayer = player1;
   }
+  checkTie();
 }
 
 function turn(squareId, player) {
@@ -61,6 +62,22 @@ function checkWin(board, player) {
   return gameWon;
 }
 
+function emptySquares() {
+  return playBoard.filter(s => typeof s == 'number')
+}
+
+function checkTie() {
+  if (emptySquares().length == 0) {
+    for (let i = 0; i < squares.length; i++) {
+      squares[i].style.backgroundColor = 'green';
+      squares[i].removeEventListener('click', clickTurn);      
+    }
+    winner("It's a tie!");
+    return true;
+  }
+  return false;
+}
+
 function gameOver(gameWon) {
   for (let index of winCombos[gameWon.index]) {
     document.getElementById(index).style.backgroundColor =
@@ -69,4 +86,13 @@ function gameOver(gameWon) {
   for (let i = 0; i < squares.length; i++) {
     squares[i].removeEventListener("click", clickTurn);
   }
+  if (gameWon.player == player1) {
+    winner('Player 1 wins!');
+  } else {
+    winner('Player2 wins!');
+  }
+}
+
+function winner(who) {
+  document.querySelector('.text').innerText = who;
 }
