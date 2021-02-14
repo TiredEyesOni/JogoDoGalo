@@ -1,6 +1,8 @@
-let playBoard = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+let playBoard;
 const player1 = "O";
 const player2 = "X";
+let player1Score = 0;
+let player2Score = 0;
 let currentPlayer = player1;
 const winCombos = [
   [0, 1, 2],
@@ -14,18 +16,22 @@ const winCombos = [
 ];
 
 const squares = document.querySelectorAll(".cell");
+let score1 = document.querySelector('#player1');
+let score2 = document.querySelector('#player2');
 startGame();
 
 function startGame() {
   for (var i = 0; i < squares.length; i++) {
+    playBoard = [0, 1, 2, 3, 4, 5, 6, 7, 8];
     squares[i].innerText = "";
     squares[i].style.removeProperty("background-color");
     squares[i].addEventListener("click", clickTurn);
   }
+  document.querySelector('.text').innerText = '';
 }
 
 function reset() {
-  location.reload();
+  startGame();
 }
 
 function clickTurn(square) {
@@ -50,8 +56,7 @@ function turn(squareId, player) {
 }
 
 function checkWin(board, player) {
-  let plays = board.reduce((a, e, i) =>                     
-  (e == player ? a.concat(i) : a), []);						 
+  let plays = board.reduce((a, e, i) => (e == player ? a.concat(i) : a), []);						 
   let gameWon = null;
   for (let [index, win] of winCombos.entries()) {
     if (win.every((elem) => plays.indexOf(elem) > -1)) {
@@ -73,26 +78,36 @@ function checkTie() {
       squares[i].removeEventListener('click', clickTurn);      
     }
     winner("It's a tie!");
-    return true;
   }
-  return false;
 }
 
 function gameOver(gameWon) {
   for (let index of winCombos[gameWon.index]) {
-    document.getElementById(index).style.backgroundColor =
-      gameWon.player == player1 ? "blue" : "red";
+    if (gameWon.player == player1) {
+      document.getElementById(index).style.backgroundColor = 'blue';
+    } else {
+      document.getElementById(index).style.backgroundColor = 'red';
+    }
   }
   for (let i = 0; i < squares.length; i++) {
     squares[i].removeEventListener("click", clickTurn);
   }
   if (gameWon.player == player1) {
     winner('Player 1 wins!');
+    player1Score += 1;
+    localStorage.setItem('player1', player1Score);
   } else {
     winner('Player2 wins!');
+    player2Score += 1;
+    localStorage.setItem('player2', player2Score);
   }
 }
+
+score1.innerText = localStorage.getItem('player1', player1Score);
+score2.innerText = localStorage.getItem('player2', player2Score);
 
 function winner(who) {
   document.querySelector('.text').innerText = who;
 }
+
+console.log(localStorage);
