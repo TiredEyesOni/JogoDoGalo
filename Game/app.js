@@ -21,8 +21,8 @@ let score2 = document.querySelector('#player2');
 startGame();
 
 function startGame() {
-  for (var i = 0; i < squares.length; i++) {
-    playBoard = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  playBoard = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  for (let i = 0; i < squares.length; i++) {
     squares[i].innerText = "";
     squares[i].style.removeProperty("background-color");
     squares[i].addEventListener("click", clickTurn);
